@@ -3,7 +3,7 @@
 
 import random
 import math
-class ElgamalAlgorithm:
+class DecryptionAlgorithm:
     def __init__(self, private_key: int):
         self.private_key = private_key
         self.public_key_file_name = "./files/public_keys.txt"
@@ -37,15 +37,13 @@ class ElgamalAlgorithm:
 
     def generate_public_key(self):
         large_prime, primitive_root = self._generate_primitive_root()
-        print("\n\t large_prime: ", large_prime, len(str(large_prime)))
-        print("\n\t primitive_root: ", primitive_root, len(str(primitive_root)))
         primitive_power = math.pow(primitive_root, self.private_key)
         public_key = primitive_power % large_prime 
         self._file_writer(self.public_key_file_name, "\n\t Public Key: \n")
         self._file_writer(self.public_key_file_name, str(public_key))
         return public_key
 
-ff = ElgamalAlgorithm(50)
+ff = PublicKeyGen(50)
 # gf = ff.generate_large_prime()
 public_key = ff.generate_public_key()
 # print("\n\t GF: ", gf, len(str(gf)))
