@@ -1,0 +1,37 @@
+
+	 Generated Prime: 
+949015005518210718733296356723
+	 Primitive Root: 
+949015005518210
+	 Generated Prime: 
+657837709111183
+	 Primitive Root: 
+6578377
+	 Generated Prime: 
+871
+	 Primitive Root: 
+8
+	 Public Key: 
+871.0
+	 Generated Prime: 
+13018
+	 Primitive Root: 
+13
+	 Public Key: 
+13018.0
+	 Generated Prime: 
+45086
+	 Primitive Root: 
+45
+	 Public Key: 
+45086.0
+	 Generated Prime: 
+508484373673
+	 Primitive Root: 
+508484
+	 Public Key: 
+508484373673.0
+	 Generated Prime: 
+567560044897747
+	 Primitive Root: 
+5675600
