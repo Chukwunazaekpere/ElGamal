@@ -35,3 +35,53 @@
 567560044897747
 	 Primitive Root: 
 5675600
+	 Generated Prime: 
+412537529531137
+	 Primitive Root: 
+4125375
+	 Generated Prime: 
+19000649856359
+	 Primitive Root: 
+1900064
+	 Generated Prime: 
+295240175933
+	 Primitive Root: 
+295240
+	 Public Key: 
+295240175933.0
+	 Generated Prime: 
+444204248207
+	 Primitive Root: 
+444204
+	 Public Key: 
+444204248207.0
+	 Generated Prime: 
+713347346461
+	 Primitive Root: 
+713347
+	 Public Key: 
+713347346461.0
+	 Generated Prime: 
+1557373664971
+	 Primitive Root: 
+155737
+	 Public Key: 
+1557373664971.0
+	 Generated Prime: 
+604572182143
+	 Primitive Root: 
+604572
+	 Public Key: 
+604572182143.0
+	 Generated Prime: 
+645868079387
+	 Primitive Root: 
+645868
+	 Public Key: 
+539296741808.0
+	 Generated Prime: 
+299931924673
+	 Primitive Root: 
+299931
+	 Public Key: 
+148716910927.0

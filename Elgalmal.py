@@ -15,10 +15,10 @@ class ElgamalAlgorithm:
 
     def _generate_large_prime(self):
         count = 2
-        rand = random.getrandbits(50)
+        rand = random.getrandbits(40)
         while count <= 10:
             if rand % count == 0:
-                rand = random.getrandbits(50)
+                rand = random.getrandbits(40)
                 count = 2
             count+=1
         return rand
@@ -37,14 +37,16 @@ class ElgamalAlgorithm:
 
     def generate_public_key(self):
         large_prime, primitive_root = self._generate_primitive_root()
+        print("\n\t large_prime: ", large_prime, len(str(large_prime)))
+        print("\n\t primitive_root: ", primitive_root, len(str(primitive_root)))
         primitive_power = math.pow(primitive_root, self.private_key)
-        public_key = large_prime % primitive_power
+        public_key = primitive_power % large_prime 
         self._file_writer(self.public_key_file_name, "\n\t Public Key: \n")
         self._file_writer(self.public_key_file_name, str(public_key))
         return public_key
 
 ff = ElgamalAlgorithm(50)
 # gf = ff.generate_large_prime()
-primitive_root = ff.generate_public_key()
+public_key = ff.generate_public_key()
 # print("\n\t GF: ", gf, len(str(gf)))
-print("\n\t primitive_root: ",primitive_root, len(str(primitive_root)))
+print("\n\t public_key: ",public_key, len(str(public_key)))
