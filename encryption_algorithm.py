@@ -47,11 +47,7 @@ class EncryptionAlgorithm:
     def _secret_key_generator(self):
         public_key_content = self._file_helper(file_mode="rl",file_name=self.public_key_file_name)
         large_prime = self._get_line_prop(public_key_content, "prime")
-        print("\n\t large_prime: ", large_prime)
-
         public_key = self._get_line_prop(public_key_content, "public")
-        print("\n\t public_key: ", public_key)
-
         primitive_root = self._get_line_prop(public_key_content, "primitive")
         print("\n\t primitive_root: ", primitive_root)
         print("\n\t self.private_key: ", self.private_key)
@@ -63,7 +59,7 @@ class EncryptionAlgorithm:
         public_key_power = math.pow(pub_key_int, self.private_key)
         secret_key = public_key_power % large_prime_int
         secret_key_int = int(str(secret_key).split(".")[0])
-        self._file_helper(self.public_key_file_name, f"\n\t Secret Key:\n {str(secret_key)}")
+        self._file_helper(file_name=self.secret_key_file_name, file_mode="a+", content=f"\n\t Secret Key:\n {str(secret_key)}",)
         self.secret_key = secret_key_int
         self.public_key = pub_key_int
         self.large_prime = large_prime_int
@@ -79,10 +75,8 @@ class EncryptionAlgorithm:
 
 
     def encrypt_message(self):
-        encoded_message_file = self._file_helper(file_mode="r", file_name=self.encoded_message_file_name)
         self._generate_encrypter_public_key()
         print("\n\t encoded_char-key: ", self.secret_key)
-        print("\n\t encoded_message_file: ", encoded_message_file)
         plain_text = self._file_helper(file_mode="r", file_name=self.plain_message)
         self._file_helper(file_mode="w", file_name=self.encrypted_message_file, content="")
         for char in plain_text:
