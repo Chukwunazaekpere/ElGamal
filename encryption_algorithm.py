@@ -10,9 +10,14 @@ class EncryptionAlgorithm:
         self.private_key = private_key
         self.public_key_file_name = "./files/public_keys.txt"
         self.encoded_message_file_name = "./files/encoded_message.txt"
+        self.encrypted_message_file = "./files/encrypted_message.txt"
         self.plain_message = plain_message_file_name
         self.secret_key_file_name = "./files/secret_key.txt" 
-        
+        self.secret_key = None 
+        self.primitive_root = None
+        self.public_key = None 
+        self.large_prime = None 
+
 
     def _file_helper(self, file_name:str, file_mode:str, content=""):
         """Read file containing message to be encrypted or decrypted"""
@@ -49,27 +54,38 @@ class EncryptionAlgorithm:
     def _secret_key_generator(self):
         public_key_content = self._file_helper(file_mode="rl",file_name=self.public_key_file_name)
         large_prime = self._get_line_prop(public_key_content, "prime")
-        public_key = self._get_line_prop(public_key_content, "public")
+        public_key = self._get_line_prop(public_key_content, "generator public")
+        primitive_root = self._get_line_prop(public_key_content, "primitive")
         public_key_power = math.pow(public_key, self.private_key)
         secret_key = public_key_power % large_prime 
-        self._file_helper(self.secret_key_file_name, "\n\t Secret Key: \n")
-        self._file_helper(self.secret_key_file_name, str(secret_key))
+        self._file_helper(self.public_key_file_name, f"\n\t Secret Key:\n {str(secret_key)}")
+        self.secret_key = secret_key
+        self.public_key = public_key
+        self.large_prime = large_prime
+        self.primitive_root = primitive_root
+
+    def _generate_encrypter_public_key(self):
+        self._secret_key_generator()
+        primitive_power = math.pow(self.primitive_root, self.private_key)
+        public_key = primitive_power % self.large_prime 
+        self._file_helper(self.public_key_file_name, f"\n\t Encrypter Public Key:\n {str(public_key)}")
+        return public_key
 
 
 
     def encrypt_message(self):
-        large_prime, primitive_root = self._generate_primitive_root()
-        primitive_power = math.pow(primitive_root, self.private_key)
-        public_key = primitive_power % large_prime 
-        self._file_helper(self.public_key_file_name, "\n\t Public Key: \n")
-        self._file_helper(self.public_key_file_name, str(public_key))
-        return public_key
+        self._encode_plaintext_chars() # Encode characters in plain text
+        encoded_message_file = self._file_helper(file_mode="r", file_name=self.encoded_message_file_name)
+
+        for encoded_char in encoded_message_file:
+            encrypted_char = self.secret_key*encoded_char % self.large_prime
+            self._file_helper(file_mode="a+", file_name=self.encrypted_message_file, content=encrypted_char)
+        
 
 plain_message_file_name = "./files/plain_message.txt"
-public_key_file_name = "./files/public_keys.txt"
 private_key = 200
 ff = EncryptionAlgorithm(plain_message_file_name=plain_message_file_name, private_key=private_key)
-gf = ff._file_helper(file_mode="rl",file_name=public_key_file_name)
+gf = ff.encrypt_message()
 
 
 # public_key = ff.generate_public_key()

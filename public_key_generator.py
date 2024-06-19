@@ -26,12 +26,10 @@ class PublicKeyGen:
     def _generate_primitive_root(self):
         large_prime = self._generate_large_prime()
         stringified_prime = str(large_prime)
-        self._file_writer(self.public_key_file_name, "\n\t Generated Prime: \n")
-        self._file_writer(self.public_key_file_name, stringified_prime)
+        self._file_writer(self.public_key_file_name, f"\n\t Generated Prime:\n {stringified_prime}")
         large_prime_len = len(stringified_prime)
         primitive_root = stringified_prime[0:large_prime_len//2]
-        self._file_writer(self.public_key_file_name, "\n\t Primitive Root: \n")
-        self._file_writer(self.public_key_file_name, primitive_root)
+        self._file_writer(self.public_key_file_name, f"\n\t Primitive Root:\n {primitive_root}")
         return large_prime, int(primitive_root)
 
 
@@ -39,8 +37,7 @@ class PublicKeyGen:
         large_prime, primitive_root = self._generate_primitive_root()
         primitive_power = math.pow(primitive_root, self.private_key)
         public_key = primitive_power % large_prime 
-        self._file_writer(self.public_key_file_name, "\n\t Public Key: \n")
-        self._file_writer(self.public_key_file_name, str(public_key))
+        self._file_writer(self.public_key_file_name, f"\n\t Generator Public Key:\n {str(public_key)}")
         return public_key
 
 ff = PublicKeyGen(50)
