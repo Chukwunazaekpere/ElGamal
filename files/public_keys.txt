@@ -1,7 +1,7 @@
 
-	 Generated Prime: 
-192090640337
-	 Primitive Root: 
-192090
-	 Public Key: 
-97578206499.0
+	 Generated Prime:
+ 49759057429
+	 Primitive Root:
+ 49759
+	 Generator Public Key:
+ 30131408282.0
