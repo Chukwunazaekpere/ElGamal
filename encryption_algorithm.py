@@ -1,7 +1,6 @@
 
 
 
-import random
 import math
 
 
@@ -23,15 +22,15 @@ class EncryptionAlgorithm:
         """Read file containing message to be encrypted or decrypted"""
         if file_mode == "r":
             with open(file_name, "r")as file_content:
-                file_content.read()
-            return file_content
+                content = file_content.read()
+            return content
         elif file_mode == "rl":
             with open(file_name, "r")as file_content:
                 file_content_list = file_content.readlines()
             return file_content_list
         else:
             with open(file_name, "+a")as file_handle:
-                file_handle.write(content)
+                file_handle.write(str(content))
 
     def _get_line_prop(self, read_line_data:list, key_word: str):
         seen_pub = False
