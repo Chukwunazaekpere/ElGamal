@@ -61,8 +61,7 @@ class ElGamalEncryptionAlgorithm:
         large_prime = self._get_line_prop(public_key_content, "prime")
         public_key = self._get_line_prop(public_key_content, "generator")#public key generated during key generation
         primitive_root = self._get_line_prop(public_key_content, "primitive")
-        print("\n\t primitive_root: ", primitive_root)
-        print("\n\t self.private_key: ", self.private_key)
+        # print("\n\t primitive_root: ", primitive_root)
 
         pub_key_int = int(public_key)
         large_prime_int = int(large_prime)
@@ -109,7 +108,7 @@ class ElGamalEncryptionAlgorithm:
         
 
 plain_message_file_name = "./files/plain_message.txt"
-private_key = 15
+private_key = 5
 ff = ElGamalEncryptionAlgorithm(plain_message_file_name=plain_message_file_name, private_key=private_key)
 gf = ff.encrypt_message()
 

@@ -33,10 +33,10 @@ class ElGamalPublicKeyGen:
 
     def _generate_large_prime(self):
         count = 2
-        rand = random.getrandbits(40)
+        rand = random.getrandbits(20)
         while count <= 10:
             if rand % count == 0:
-                rand = random.getrandbits(40)
+                rand = random.getrandbits(20)
                 count = 2
             count+=1
         return rand
@@ -44,6 +44,7 @@ class ElGamalPublicKeyGen:
 
     def _generate_primitive_root(self):
         large_prime = self._generate_large_prime()
+        self._file_writer(file_name=self.public_key_file_name, content=f"\n\t Large Prime:\n {large_prime}")
         power = 1
         index = 1
         primitive_root_list = []
@@ -85,7 +86,9 @@ class ElGamalPublicKeyGen:
         self._file_writer(file_name=self.public_key_file_name, content=f"\n\t Generator Public Key:\n {str(public_key)}")
         return public_key
 
-ff = ElGamalPublicKeyGen(3)
+
+private_key = 5
+ff = ElGamalPublicKeyGen(private_key=private_key)
 # gf = ff.generate_large_prime()
 public_key = ff.generate_public_key()
 # print("\n\t GF: ", gf, len(str(gf)))

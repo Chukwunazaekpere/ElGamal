@@ -17,7 +17,7 @@ class ElgamalDecryptionAlgorithm:
         self.private_key = private_key
         self.public_key_file_name = "./files/public_keys.txt"
         self.encrypted_message_file = "./files/encrypted_message.txt"
-        self.decrypted_message_file = "./files/encrypted_message.txt"
+        self.decrypted_message_file = "./files/decrypted_message.txt"
         self.secret_key = "" 
         self.secret_key_file_name = "./files/secret_key.txt" 
         self.encrypter_public_key = "" 
@@ -43,6 +43,22 @@ class ElgamalDecryptionAlgorithm:
             with open(file_name, "+a")as file_handle:
                 file_handle.write(str(content))
 
+    def _get_modulo_inverse(self, inv_val:int, mod_val:int):
+        """Get modulo inverse of val"""
+        # mod_inv = mod_val
+        # mod_inv = mod_val-1
+        count = 2
+        while count < mod_val:
+            print("\n\t count: ", count)
+            val = inv_val*count % mod_val
+            if val == 1:
+                modulo_inverse = count
+                return modulo_inverse
+            count+=1
+            # print("\n\t mod_val: ", mod_val)
+        return 1
+
+
     def _get_line_prop(self, read_line_data:list, key_word: str):
         seen_pub = False
         for l in read_line_data:
@@ -58,9 +74,9 @@ class ElgamalDecryptionAlgorithm:
         large_prime = self._get_line_prop(public_key_content, "prime")
         encrypter_public_key = self._get_line_prop(public_key_content, "encrypter")# public key generated during encryption
         encrypter_public_key_int = int(encrypter_public_key)
-        print("\n\t encrypter_public_key_int: ", encrypter_public_key_int)
+        # print("\n\t encrypter_public_key_int: ", encrypter_public_key_int)
         large_prime_int = int(large_prime)
-        print("\n\t large_prime_int: ", large_prime_int)
+        # print("\n\t large_prime_int: ", large_prime_int)
 
         encrypter_public_key_power = math.pow(encrypter_public_key_int, self.private_key)
         secret_key = int(encrypter_public_key_power) % large_prime_int
@@ -75,27 +91,38 @@ class ElgamalDecryptionAlgorithm:
         
     def decrypt(self):
         self._secret_key_generator()
-        encrypted_text = self._file_helper(file_mode="r", file_name=self.encrypted_message)
-        self._file_helper(file_mode="w", file_name=self.encrypted_message_file, content="")
+        encrypted_text = self._file_helper(file_mode="r", file_name=self.encrypted_message_file)
+        self._file_helper(file_mode="w", file_name=self.decrypted_message_file, content="")
         char_to_decrypt = ""
+        secret_key_inverse = self._get_modulo_inverse(inv_val=self.secret_key, mod_val=self.large_prime)
+        # secret_key_inverse = 30000
+        print("\n\t secret_key_inverse: ", secret_key_inverse)
+        forbidden_char = [ "-"]
         for char in encrypted_text:
-            char_to_write = str(char)
-            if char != "-":
+            # char_to_write = str(char)
+            if char not in forbidden_char:
                 char_to_decrypt+=char
-            elif char == " ":
-                plain_char = ""
-                try:
-                    plain_char = self.decryption_dictionary[char_to_decrypt]
-                except:
-                    unicode_char = (char_to_decrypt/self.secret_key) % self.large_prime
-                    plain_char = chr(unicode_char)
-                    self.decryption_dictionary[char_to_decrypt] = plain_char
-                self._file_helper(file_mode="a+", file_name=self.encrypted_message_file, content=f"{f"{plain_char} \n" if char == "." else plain_char}-")
-            return char_to_write
+                # print("\n\t if-char_to_decrypt: ", char_to_decrypt)
+            else:
+                plain_char = char_to_decrypt
+                if char != " " and char_to_decrypt != " ":
+                    try:
+                        plain_char = self.decryption_dictionary[char_to_decrypt]
+                        print("\n\t try--plain_char: ", plain_char)
+                    except:
+                        print("\n\t char_to_decrypt: ", char_to_decrypt)
+                        unicode_char = (int(char_to_decrypt)*int(secret_key_inverse)) % self.large_prime
+                        print("\n\t unicode_char: ", unicode_char)
+                        plain_char = chr(unicode_char)
+                        self.decryption_dictionary[char_to_decrypt] = plain_char
+                print("\n\t plain_char: ", plain_char)
+                self._file_helper(file_mode="a+", file_name=self.decrypted_message_file, content=f"{f"{plain_char} \n" if char == "." else plain_char}")
+                char_to_decrypt = ""
+        # print("\n\t char_to_decrypt: ", char_to_decrypt)
+        # return char_to_write
         
 
-encrypted_message_file_name = "./files/encrypted_message.txt"
-private_key = 3 # Provide private key used, during key generation
+private_key = 5 # Provide private key used, during key generation
 ff = ElgamalDecryptionAlgorithm( private_key=private_key)
 gf = ff.decrypt()
 
