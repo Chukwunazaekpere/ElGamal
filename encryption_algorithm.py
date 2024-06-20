@@ -91,11 +91,10 @@ class EncryptionAlgorithm:
                 except:
                     # print("\n\t derived encryption_dictionary: ", char)
                     char_to_write = ord(char)
-                    # print("\n\t encoded_char-key: ", encoded_char)
                     encrypted_char = self.secret_key*char_to_write % self.large_prime
                     char_to_write = encrypted_char
                     self.encryption_dictionary[char] = char_to_write
-            self._file_helper(file_mode="a+", file_name=self.encrypted_message_file, content=f"-{char_to_write}-")
+            self._file_helper(file_mode="a+", file_name=self.encrypted_message_file, content=f"{char_to_write}")
         
 
 plain_message_file_name = "./files/plain_message.txt"

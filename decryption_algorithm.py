@@ -4,17 +4,21 @@
 import random
 import math
 class DecryptionAlgorithm:
-    def __init__(self, private_key: int, encrypted_message_file_name:str):
+    def __init__(self, private_key: int, plain_message_file_name:str, encrypted_message_file_name:str):
         self.private_key = private_key
         self.public_key_file_name = "./files/public_keys.txt"
         self.encoded_message_file_name = "./files/encoded_message.txt"
         self.encrypted_message_file = "./files/encrypted_message.txt"
         self.encrypted_message = encrypted_message_file_name
+        self.plain_message = plain_message_file_name
         self.secret_key_file_name = "./files/secret_key.txt" 
         self.secret_key = "" 
         self.primitive_root = ""
         self.encrypter_public_key = "" 
         self.large_prime = "" 
+        self.encryption_dictionary = {} #dictionary where plain-character is key & encrypted character is the value. This is to reduce the extra time taken for excrypting plain characters that have been encrypted already
+        self.decryption_dictionary = {} #dictionary where plain-character is key & encrypted character is the value. This is to reduce the extra time taken for excrypting plain characters that have been encrypted already
+
 
 
     def _file_helper(self, file_name:str, file_mode:str, content=""):
@@ -52,8 +56,6 @@ class DecryptionAlgorithm:
 
         encrypter_public_key_int = int(encrypter_public_key.split(".")[0])
         large_prime_int = int(large_prime.split(".")[0])
-        # primitive_root_int = int(primitive_root.split(".")[0])
-
         encrypter_public_key_power = math.pow(encrypter_public_key_int, self.private_key)
         secret_key = encrypter_public_key_power % large_prime_int
         secret_key_int = int(str(secret_key).split(".")[0])
@@ -61,7 +63,6 @@ class DecryptionAlgorithm:
         self.secret_key = secret_key_int
         self.encrypter_public_key = encrypter_public_key_int
         self.large_prime = large_prime_int
-        # self.primitive_root = primitive_root_int
 
     def _generate_encrypter_public_key(self):
         self._secret_key_generator()
@@ -72,27 +73,32 @@ class DecryptionAlgorithm:
 
     def encrypt_message(self):
         self._generate_encrypter_public_key()
-        print("\n\t encoded_char-key: ", self.secret_key)
         plain_text = self._file_helper(file_mode="r", file_name=self.plain_message)
         self._file_helper(file_mode="w", file_name=self.encrypted_message_file, content="")
         for char in plain_text:
             char_to_write = str(char)
             if char != " ":
-                char_to_write = ord(char)
-                # print("\n\t encoded_char-key: ", encoded_char)
-                encrypted_char = self.secret_key*char_to_write % self.large_prime
-                char_to_write = encrypted_char
+                encrypted_char = ""
+                try:
+                    encrypted_char = self.encryption_dictionary[char]
+                    # print("\n\t used encryption_dictionary: ", char)
+                    char_to_write = encrypted_char
+                except:
+                    # print("\n\t derived encryption_dictionary: ", char)
+                    char_to_write = ord(char)
+                    encrypted_char = self.secret_key*char_to_write % self.large_prime
+                    char_to_write = encrypted_char
+                    self.encryption_dictionary[char] = char_to_write
             self._file_helper(file_mode="a+", file_name=self.encrypted_message_file, content=f"-{char_to_write}-")
-       
+        
 
     def encryption_char_length(self):
         """Get the length of each character that was used for encryption"""
         # self._generate_encrypter_public_key()
-        self._secret_key_generator()
         print("\n\t encoded_char-key: ", self.secret_key)
-        encrypted_text = self._file_helper(file_mode="r", file_name=self.encrypted_message)
-        self._file_helper(file_mode="w", file_name=self.encrypted_message_file, content="")
-        for char in encrypted_text:
+        plain_text = self._file_helper(file_mode="r", file_name=self.plain_message)
+        self._file_helper(file_mode="w", file_name=self.plain_message, content="")
+        for char in plain_text:
             char_to_write = str(char)
             if char != " ":
                 char_to_write = ord(char)
@@ -102,6 +108,7 @@ class DecryptionAlgorithm:
             return char_to_write
         
     def decrypt(self):
+        self._secret_key_generator()
         encrypted_text = self._file_helper(file_mode="r", file_name=self.encrypted_message)
         self._file_helper(file_mode="w", file_name=self.encrypted_message_file, content="")
         for char in encrypted_text:
