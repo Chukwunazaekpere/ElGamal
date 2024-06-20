@@ -1,4 +1,14 @@
-
+"""
+Author: Chukwunazaekpere Emmanuel Obioma
+Written for: Group 3
+Nationality: Biafran
+Email-1: chukwunazaekpere.obioma@ue-germany.de 
+Email-2: ceo.naza.tech@gmail.com
+************************************************
+Course: Software Optimisation
+Written: June 15th 2024
+Due: June 30th 2024
+"""
 
 
 import math
@@ -49,20 +59,21 @@ class ElGamalEncryptionAlgorithm:
         """Generate secret key for encryption"""
         public_key_content = self._file_helper(file_mode="rl",file_name=self.public_key_file_name)# get content written to the public key file
         large_prime = self._get_line_prop(public_key_content, "prime")
-        public_key = self._get_line_prop(public_key_content, "public")#public key generated during key generation
+        public_key = self._get_line_prop(public_key_content, "generator")#public key generated during key generation
         primitive_root = self._get_line_prop(public_key_content, "primitive")
         print("\n\t primitive_root: ", primitive_root)
         print("\n\t self.private_key: ", self.private_key)
 
-        pub_key_int = int(public_key.split(".")[0])
-        large_prime_int = int(large_prime.split(".")[0])
-        primitive_root_int = int(primitive_root.split(".")[0])
+        pub_key_int = int(public_key)
+        large_prime_int = int(large_prime)
+        primitive_root_int = int(primitive_root)
 
         public_key_power = math.pow(pub_key_int, self.private_key)
-        secret_key = public_key_power % large_prime_int
-        secret_key_int = int(str(secret_key).split(".")[0])
+        secret_key = int(public_key_power) % large_prime_int
+        # secret_key_int = int(secret_key)
+        self._file_helper(file_mode="w", file_name=self.secret_key_file_name, content="")
         self._file_helper(file_name=self.secret_key_file_name, file_mode="a+", content=f"\n\t Secret Key During Encryption:\n {str(secret_key)}",)
-        self.secret_key = secret_key_int
+        self.secret_key = secret_key
         self.public_key = pub_key_int
         self.large_prime = large_prime_int
         self.primitive_root = primitive_root_int
@@ -70,7 +81,7 @@ class ElGamalEncryptionAlgorithm:
     def _generate_encrypter_public_key(self):
         self._secret_key_generator()
         primitive_power = math.pow(self.primitive_root, self.private_key)
-        public_key = primitive_power % self.large_prime 
+        public_key = int(primitive_power) % self.large_prime 
         self._file_helper(file_mode="a+", file_name=self.public_key_file_name, content=f"\n\t Encrypter Public Key:\n {str(public_key)}")
         return public_key
 
@@ -94,11 +105,11 @@ class ElGamalEncryptionAlgorithm:
                     encrypted_char = self.secret_key*char_to_write % self.large_prime
                     char_to_write = encrypted_char
                     self.encryption_dictionary[char] = char_to_write
-            self._file_helper(file_mode="a+", file_name=self.encrypted_message_file, content=f"{char_to_write}")
+            self._file_helper(file_mode="a+", file_name=self.encrypted_message_file, content=f"{f"{char_to_write} \n" if char == "." else char_to_write}-")
         
 
 plain_message_file_name = "./files/plain_message.txt"
-private_key = 27
+private_key = 15
 ff = ElGamalEncryptionAlgorithm(plain_message_file_name=plain_message_file_name, private_key=private_key)
 gf = ff.encrypt_message()
 
