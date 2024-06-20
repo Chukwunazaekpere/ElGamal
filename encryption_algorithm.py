@@ -4,7 +4,7 @@
 import math
 
 
-class EncryptionAlgorithm:
+class ElGamalEncryptionAlgorithm:
     def __init__(self, private_key: int, plain_message_file_name:str):
         self.private_key = private_key
         self.public_key_file_name = "./files/public_keys.txt"
@@ -99,7 +99,7 @@ class EncryptionAlgorithm:
 
 plain_message_file_name = "./files/plain_message.txt"
 private_key = 27
-ff = EncryptionAlgorithm(plain_message_file_name=plain_message_file_name, private_key=private_key)
+ff = ElGamalEncryptionAlgorithm(plain_message_file_name=plain_message_file_name, private_key=private_key)
 gf = ff.encrypt_message()
 
 

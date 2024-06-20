@@ -3,7 +3,7 @@
 
 import random
 import math
-class PublicKeyGen:
+class ElGamalPublicKeyGen:
     def __init__(self, private_key: int):
         self.private_key = private_key
         self.public_key_file_name = "./files/public_keys.txt"
@@ -40,7 +40,7 @@ class PublicKeyGen:
         self._file_writer(self.public_key_file_name, f"\n\t Generator Public Key:\n {str(public_key)}")
         return public_key
 
-ff = PublicKeyGen(50)
+ff = ElGamalPublicKeyGen(50)
 # gf = ff.generate_large_prime()
 public_key = ff.generate_public_key()
 # print("\n\t GF: ", gf, len(str(gf)))
