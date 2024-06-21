@@ -10,8 +10,15 @@ Written: June 15th 2024
 Due: June 30th 2024
 """
 
+from datetime import datetime
 
 import math
+import logging
+logger = logging.getLogger(__name__)
+log_date = datetime.now()
+logging.basicConfig(level=logging.INFO)
+
+
 class ElgamalDecryptionAlgorithm:
     def __init__(self, private_key: int):
         self.private_key = private_key
@@ -45,17 +52,15 @@ class ElgamalDecryptionAlgorithm:
 
     def _get_modulo_inverse(self, inv_val:int, mod_val:int):
         """Get modulo inverse of val"""
-        # mod_inv = mod_val
-        # mod_inv = mod_val-1
+        logging.info(msg=f"\n\t {datetime.now()} Generating modulo inverse")
         count = 2
         while count < mod_val:
-            print("\n\t count: ", count)
+            # print("\n\t count: ", count)
             val = inv_val*count % mod_val
             if val == 1:
                 modulo_inverse = count
                 return modulo_inverse
             count+=1
-            # print("\n\t mod_val: ", mod_val)
         return 1
 
 
@@ -70,6 +75,7 @@ class ElgamalDecryptionAlgorithm:
     
     def _secret_key_generator(self):
         """Geenerates the secret key that was used during encryption"""
+        logging.info(msg="\n\t ElGamalEncryptionAlgorithm is generating the secret key used in encryption...")
         public_key_content = self._file_helper(file_mode="rl",file_name=self.public_key_file_name)
         large_prime = self._get_line_prop(public_key_content, "prime")
         encrypter_public_key = self._get_line_prop(public_key_content, "encrypter")# public key generated during encryption
@@ -87,42 +93,42 @@ class ElgamalDecryptionAlgorithm:
         self.secret_key = secret_key_int
         self.encrypter_public_key = encrypter_public_key_int
         self.large_prime = large_prime_int
+        logging.info(msg="\n\t Secret key used in encrypting has been successfully generated...")
 
         
     def decrypt(self):
-        self._secret_key_generator()
-        encrypted_text = self._file_helper(file_mode="r", file_name=self.encrypted_message_file)
-        self._file_helper(file_mode="w", file_name=self.decrypted_message_file, content="")
-        char_to_decrypt = ""
-        secret_key_inverse = self._get_modulo_inverse(inv_val=self.secret_key, mod_val=self.large_prime)
-        # secret_key_inverse = 30000
-        print("\n\t secret_key_inverse: ", secret_key_inverse)
-        forbidden_char = [ "-"]
-        for char in encrypted_text:
-            # char_to_write = str(char)
-            if char not in forbidden_char:
-                char_to_decrypt+=char
-                # print("\n\t if-char_to_decrypt: ", char_to_decrypt)
-            else:
-                plain_char = char_to_decrypt
-                if char != " " and char_to_decrypt != " ":
-                    try:
-                        plain_char = self.decryption_dictionary[char_to_decrypt]
-                        print("\n\t try--plain_char: ", plain_char)
-                    except:
-                        print("\n\t char_to_decrypt: ", char_to_decrypt)
-                        unicode_char = (int(char_to_decrypt)*int(secret_key_inverse)) % self.large_prime
-                        print("\n\t unicode_char: ", unicode_char)
-                        plain_char = chr(unicode_char)
-                        self.decryption_dictionary[char_to_decrypt] = plain_char
-                print("\n\t plain_char: ", plain_char)
-                self._file_helper(file_mode="a+", file_name=self.decrypted_message_file, content=f"{f"{plain_char} \n" if char == "." else plain_char}")
-                char_to_decrypt = ""
-        # print("\n\t char_to_decrypt: ", char_to_decrypt)
-        # return char_to_write
+        try:
+            logging.info(msg=f"\n\t Decryption started: {datetime.now()}")
+            self._secret_key_generator()
+            encrypted_text = self._file_helper(file_mode="r", file_name=self.encrypted_message_file)
+            self._file_helper(file_mode="w", file_name=self.decrypted_message_file, content="")
+            char_to_decrypt = ""
+            secret_key_inverse = self._get_modulo_inverse(inv_val=self.secret_key, mod_val=self.large_prime)
+            logging.info(msg=f"\n\t Secret key inverse: {secret_key_inverse}")
+            # print("\n\t secret_key_inverse: ", secret_key_inverse)
+            forbidden_char = [ "-"]
+            for char in encrypted_text:
+                if char not in forbidden_char:
+                    char_to_decrypt+=char
+                    # print("\n\t if-char_to_decrypt: ", char_to_decrypt)
+                else:
+                    plain_char = char_to_decrypt
+                    if char != " " and char_to_decrypt != " ":
+                        try:
+                            plain_char = self.decryption_dictionary[char_to_decrypt]
+                        except:
+                            unicode_char = (int(char_to_decrypt)*int(secret_key_inverse)) % self.large_prime
+                            # print("\n\t if-unicode_char: ", unicode_char)
+                            plain_char = chr(unicode_char)
+                            self.decryption_dictionary[char_to_decrypt] = plain_char
+                    self._file_helper(file_mode="a+", file_name=self.decrypted_message_file, content=f"{f"{plain_char} \n" if char == "." else plain_char}")
+                    char_to_decrypt = ""
+            logging.info(msg=f"\n\t Decryption has been successfully finished: {datetime.now()}")
+        except:
+            logging.info(msg=f"\n\t Something went wrong, during decryption. Are you sure you have passed the same private key, used during key generation?")
         
 
-private_key = 5 # Provide private key used, during key generation
+private_key = 7 # Provide private key used, during key generation
 ff = ElgamalDecryptionAlgorithm( private_key=private_key)
 gf = ff.decrypt()
 

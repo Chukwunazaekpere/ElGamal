@@ -1,2 +1,3 @@
 I'm Chukwunazaekpere Obioma.
-I'm an Igbo-Biafran
+I'm an Igbo-Biafran.
+This is task, it's a final assignment on software optimization.

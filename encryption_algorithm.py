@@ -10,8 +10,12 @@ Written: June 15th 2024
 Due: June 30th 2024
 """
 
-
+from datetime import datetime
 import math
+import logging
+logger = logging.getLogger(__name__)
+log_date = datetime.now()
+logging.basicConfig(level=logging.INFO)
 
 
 class ElGamalEncryptionAlgorithm:
@@ -57,6 +61,7 @@ class ElGamalEncryptionAlgorithm:
     
     def _secret_key_generator(self):
         """Generate secret key for encryption"""
+        logging.info(msg="\n\t ElGamalEncryptionAlgorithm is generating a secret key for encryption...")
         public_key_content = self._file_helper(file_mode="rl",file_name=self.public_key_file_name)# get content written to the public key file
         large_prime = self._get_line_prop(public_key_content, "prime")
         public_key = self._get_line_prop(public_key_content, "generator")#public key generated during key generation
@@ -76,6 +81,7 @@ class ElGamalEncryptionAlgorithm:
         self.public_key = pub_key_int
         self.large_prime = large_prime_int
         self.primitive_root = primitive_root_int
+        logging.info(msg="\n\t Secret key has been successfully generated...")
 
     def _generate_encrypter_public_key(self):
         self._secret_key_generator()
@@ -87,6 +93,8 @@ class ElGamalEncryptionAlgorithm:
 
 
     def encrypt_message(self):
+        start_time = datetime.now()
+        logging.info(msg=f"\n\t Encryption started: {start_time.ctime()}")
         self._generate_encrypter_public_key()
         plain_text = self._file_helper(file_mode="r", file_name=self.plain_message)
         self._file_helper(file_mode="w", file_name=self.encrypted_message_file, content="")
@@ -105,10 +113,11 @@ class ElGamalEncryptionAlgorithm:
                     char_to_write = encrypted_char
                     self.encryption_dictionary[char] = char_to_write
             self._file_helper(file_mode="a+", file_name=self.encrypted_message_file, content=f"{f"{char_to_write} \n" if char == "." else char_to_write}-")
+        logging.info(msg=f"\n\t Encryption finished: {datetime.now()}")
         
 
 plain_message_file_name = "./files/plain_message.txt"
-private_key = 5
+private_key = 12
 ff = ElGamalEncryptionAlgorithm(plain_message_file_name=plain_message_file_name, private_key=private_key)
 gf = ff.encrypt_message()
 

@@ -16,7 +16,13 @@ m mod z, m^2 mod z, m^3 mod z ... ... m^(z-1) mod z, gives numbers that are uniq
 
 
 import random
+from datetime import datetime
 import math
+import logging
+logger = logging.getLogger(__name__)
+log_date = datetime.now()
+logging.basicConfig(level=logging.INFO)
+
 class ElGamalPublicKeyGen:
     def __init__(self, private_key: int):
         self.private_key = private_key
@@ -33,12 +39,13 @@ class ElGamalPublicKeyGen:
 
     def _generate_large_prime(self):
         count = 2
-        rand = random.getrandbits(20)
+        rand = random.getrandbits(18)
         while count <= 10:
             if rand % count == 0:
-                rand = random.getrandbits(20)
+                rand+=1
                 count = 2
             count+=1
+        logging.info(msg=f"\n\t Large prime, was successfully generated...")
         return rand
     
 
@@ -70,26 +77,21 @@ class ElGamalPublicKeyGen:
                 break # rather than finding all the primitive roots of the given prime, we take the first value that satisfies the condition of a primitive root
             index+=1
         self._file_writer(file_name=self.public_key_file_name, content=f"\n\t Primitive Root:\n {primitive_root}")
-        print("\n\t primitive_root_list: ", primitive_root_list)
+        logging.info(msg=f"\n\t Primitive root: {primitive_root}, was found...")
         return large_prime, int(primitive_root)
 
 
     def generate_public_key(self):
         self._file_writer(file_mode="w", file_name=self.public_key_file_name, content="")
         large_prime, primitive_root = self._generate_primitive_root()
-        print("\n\t primitive_root: ", primitive_root)
-
         primitive_power = math.pow(primitive_root, self.private_key)
-        print("\n\t primitive_power: ", primitive_power)
-        print("\n\t large_prime: ", large_prime)
+        # print("\n\t primitive_power: ", primitive_power)
         public_key = int(primitive_power) % large_prime 
         self._file_writer(file_name=self.public_key_file_name, content=f"\n\t Generator Public Key:\n {str(public_key)}")
+        logging.info(msg=f"\n\t Public key: {public_key}, was successfully generated...")
         return public_key
 
 
-private_key = 5
-ff = ElGamalPublicKeyGen(private_key=private_key)
-# gf = ff.generate_large_prime()
-public_key = ff.generate_public_key()
-# print("\n\t GF: ", gf, len(str(gf)))
-print("\n\t public_key: ",public_key, len(str(public_key)))
+private_key = 7
+elgamal = ElGamalPublicKeyGen(private_key=private_key)
+public_key = elgamal.generate_public_key()
