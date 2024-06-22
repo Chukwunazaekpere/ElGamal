@@ -88,7 +88,13 @@ class ElGamalEncryptionAlgorithm:
         self._file_helper(file_mode="a+", file_name=self.public_key_file_name, content=f"\n\t Encrypter Public Key:\n {str(public_key)}")
         return public_key
 
-
+    def required_char(self, char:str, char_to_write: str):
+        req_char = ""
+        if char == '.':
+            req_char = f"{char_to_write} \n"
+        else:
+            req_char = char_to_write
+        return req_char
 
     def encrypt_message(self):
         start_time = datetime.now()
@@ -110,7 +116,7 @@ class ElGamalEncryptionAlgorithm:
                     encrypted_char = self.secret_key*char_to_write % self.large_prime
                     char_to_write = encrypted_char
                     self.encryption_dictionary[char] = char_to_write
-            self._file_helper(file_mode="a+", file_name=self.encrypted_message_file, content=f"{f"{char_to_write} \n" if char == "." else char_to_write}-")
+            self._file_helper(file_mode="a+", file_name=self.encrypted_message_file, content=self.required_char(char=char, char_to_write=char_to_write))
         logging.info(msg=f"\n\t Encryption finished: {datetime.now()}")
         
 

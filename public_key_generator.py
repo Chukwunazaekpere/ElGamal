@@ -39,11 +39,11 @@ class ElGamalPublicKeyGen:
 
     def _generate_large_prime(self):
         count = 2
-        rand = random.getrandbits(18)
+        rand = random.getrandbits(30)
         while count <= 10:
             if rand % count == 0:
                 rand+=1
-                count = 2
+                count = 1
             count+=1
         logging.info(msg=f"\n\t Large prime, was successfully generated...")
         return rand
