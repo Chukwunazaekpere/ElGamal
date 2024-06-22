@@ -1,0 +1,5 @@
+I'm Chukwunazaekpere Obioma.
+I'm an Igbo-Biafran.
+This is a task on ElGamal crypto algorithm. 
+It is based on the concept of Diffie-Hellman key exchange (DHKE).
+It's a final assignment on software optimization.

@@ -93,13 +93,14 @@ class ElgamalDecryptionAlgorithm:
         self.large_prime = large_prime_int
         logging.info(msg="\n\t Secret key used in encrypting has been successfully generated...")
 
-    def required_char(self, char:str, char_to_write: str):
+    def required_char(self, char:str, plain_char: str):
         req_char = ""
         if char == '.':
-            req_char = f"{char_to_write} \n"
+            req_char = f"{plain_char} \n"
         else:
-            req_char = char_to_write
+            req_char = plain_char
         return req_char
+    
     
     def decrypt(self):
         try:
@@ -123,10 +124,9 @@ class ElgamalDecryptionAlgorithm:
                             plain_char = self.decryption_dictionary[char_to_decrypt]
                         except:
                             unicode_char = (int(char_to_decrypt)*int(secret_key_inverse)) % self.large_prime
-                            # print("\n\t if-unicode_char: ", unicode_char)
                             plain_char = chr(unicode_char)
                             self.decryption_dictionary[char_to_decrypt] = plain_char
-                    self._file_helper(file_mode="a+", file_name=self.decrypted_message_file, content=self.required_char(char=char, char_to_write=plain_char))
+                    self._file_helper(file_mode="a+", file_name=self.decrypted_message_file, content=self.required_char(char=char, plain_char=plain_char))
                     char_to_decrypt = ""
             logging.info(msg=f"\n\t Decryption has been successfully finished: {datetime.now()}")
         except:

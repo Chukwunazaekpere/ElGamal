@@ -1,9 +1,11 @@
 
 	 Large Prime:
- 588566039
+ 4774591
 	 Primitive Root:
  2
 	 Generator Public Key:
  128
+	 Encrypter Public Key:
+ 4096
 	 Encrypter Public Key:
  4096

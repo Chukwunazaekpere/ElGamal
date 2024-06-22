@@ -94,7 +94,7 @@ class ElGamalEncryptionAlgorithm:
             req_char = f"{char_to_write} \n"
         else:
             req_char = char_to_write
-        return req_char
+        return f"{req_char}-"
 
     def encrypt_message(self):
         start_time = datetime.now()

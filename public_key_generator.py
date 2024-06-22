@@ -39,7 +39,7 @@ class ElGamalPublicKeyGen:
 
     def _generate_large_prime(self):
         count = 2
-        rand = random.getrandbits(30)
+        rand = random.getrandbits(25)
         while count <= 10:
             if rand % count == 0:
                 rand+=1
