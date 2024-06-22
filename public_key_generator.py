@@ -74,7 +74,7 @@ class ElGamalPublicKeyGen:
                     break
             if stop_iteration or len(primitive_root_list) == large_prime-1:
                 primitive_root = index
-                break # rather than finding all the primitive roots of the given prime, we take the first value that satisfies the condition of a primitive root
+                break # rather than finding all the primitive roots for the given prime, we take the first value that satisfies the condition of a primitive root
             index+=1
         self._file_writer(file_name=self.public_key_file_name, content=f"\n\t Primitive Root:\n {primitive_root}")
         logging.info(msg=f"\n\t Primitive root: {primitive_root}, was found...")
@@ -85,7 +85,6 @@ class ElGamalPublicKeyGen:
         self._file_writer(file_mode="w", file_name=self.public_key_file_name, content="")
         large_prime, primitive_root = self._generate_primitive_root()
         primitive_power = math.pow(primitive_root, self.private_key)
-        # print("\n\t primitive_power: ", primitive_power)
         public_key = int(primitive_power) % large_prime 
         self._file_writer(file_name=self.public_key_file_name, content=f"\n\t Generator Public Key:\n {str(public_key)}")
         logging.info(msg=f"\n\t Public key: {public_key}, was successfully generated...")

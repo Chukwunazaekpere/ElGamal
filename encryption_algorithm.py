@@ -66,8 +66,6 @@ class ElGamalEncryptionAlgorithm:
         large_prime = self._get_line_prop(public_key_content, "prime")
         public_key = self._get_line_prop(public_key_content, "generator")#public key generated during key generation
         primitive_root = self._get_line_prop(public_key_content, "primitive")
-        # print("\n\t primitive_root: ", primitive_root)
-
         pub_key_int = int(public_key)
         large_prime_int = int(large_prime)
         primitive_root_int = int(primitive_root)

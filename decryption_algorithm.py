@@ -83,10 +83,8 @@ class ElgamalDecryptionAlgorithm:
         # print("\n\t encrypter_public_key_int: ", encrypter_public_key_int)
         large_prime_int = int(large_prime)
         # print("\n\t large_prime_int: ", large_prime_int)
-
         encrypter_public_key_power = math.pow(encrypter_public_key_int, self.private_key)
         secret_key = int(encrypter_public_key_power) % large_prime_int
-        print("\n\t secret_key: ", secret_key)
 
         secret_key_int = int(str(secret_key))
         self._file_helper(file_name=self.secret_key_file_name, file_mode="a+", content=f"\n\t Secret Key During Decryption:\n {str(secret_key)}",)
@@ -103,8 +101,8 @@ class ElgamalDecryptionAlgorithm:
             encrypted_text = self._file_helper(file_mode="r", file_name=self.encrypted_message_file)
             self._file_helper(file_mode="w", file_name=self.decrypted_message_file, content="")
             char_to_decrypt = ""
+            logging.info(msg=f"\n\t Generating Secret key inverse......")
             secret_key_inverse = self._get_modulo_inverse(inv_val=self.secret_key, mod_val=self.large_prime)
-            logging.info(msg=f"\n\t Secret key inverse: {secret_key_inverse}")
             # print("\n\t secret_key_inverse: ", secret_key_inverse)
             forbidden_char = [ "-"]
             for char in encrypted_text:
@@ -129,7 +127,7 @@ class ElgamalDecryptionAlgorithm:
         
 
 private_key = 7 # Provide private key used, during key generation
-ff = ElgamalDecryptionAlgorithm( private_key=private_key)
-gf = ff.decrypt()
+elgamal = ElgamalDecryptionAlgorithm( private_key=private_key)
+decrypt = ff.decrypt()
 
 
