@@ -128,6 +128,6 @@ class ElgamalDecryptionAlgorithm:
 
 private_key = 7 # Provide private key used, during key generation
 elgamal = ElgamalDecryptionAlgorithm( private_key=private_key)
-decrypt = ff.decrypt()
+decrypt = elgamal.decrypt()
 
 
