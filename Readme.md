@@ -17,3 +17,9 @@ The various units are the required algorithm for the following
    - Scret key discovery
    - Decoding 
    - Unicode decryption 
+
+# Testing Steps
+Run the `python3 app.py` which will trigger the following steps
+1. Creates public key, which will be generated and stored under files in `files/public_keys.txt`
+2. Plain message will be encrypted from the file location in which exists and and encrypted message will be generated under files in `files/encrypted_message.txt`
+3. Decryption will be run, with the final result generated under files in `files/decrypted_message.txt`
